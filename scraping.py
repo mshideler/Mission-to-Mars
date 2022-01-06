@@ -10,6 +10,8 @@ def scrape_all():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=False)
 
+    news_title, news_paragraph = mars_news(browser)
+    
     # Run all scraping functions and store results in dictionary
     data = {
         "news_title": news_title,
@@ -27,7 +29,7 @@ def mars_news(browser):
 
     # Visit the mars nasa news site
     url = 'https://redplanetscience.com'
-    # url = 'https://data-class-mars.s3.amazonaws.com/Mars/index.html'
+    #url = 'https://data-class-mars.s3.amazonaws.com/Mars/index.html'
     browser.visit(url)
 
     # Optional delay for loading the page
@@ -55,7 +57,7 @@ def featured_image(browser):
 
     # Visit URL
     url = 'https://spaceimages-mars.com'
-    # url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
+    #url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
     browser.visit(url)
 
     # Find and click the full image button
