@@ -10,14 +10,16 @@ def scrape_all():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=False)
 
-    news_title, news_paragraph = mars_news(browser)
+    news_title, news_paragraph, = mars_news(browser)
+    hemisphere_image_urls = mars_hemispheres(browser)
     
     # Run all scraping functions and store results in dictionary
     data = {
         "news_title": news_title,
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
-        "facts": mars_facts(),
+        #"facts": mars_facts(),
+        "hemispheres": hemisphere_image_urls,
         "last_modified": dt.datetime.now()
     }
 
@@ -84,23 +86,51 @@ def featured_image(browser):
 
 # ## Mars Facts
 
-def mars_facts():
-
+#def mars_facts():
+    
     # Add try/except for error handling
-    try:
+    #try:
         # Use 'read_html' to scrape the facts table into a dataframe
-        df = pd.read_html('https://galaxyfacts-mars.com')[0]
+    #    df = pd.read_html('https://galaxyfacts-mars.com')[0]
         #df = pd.read_html('https://data-class-mars-facts.s3.amazonaws.com/Mars_Facts/index.html')[0]
     
-    except BaseException:
-        return None
+    #except BaseException:
+    #    return None
     
     # Assign columns and set index of dataframe
-    df.columns=['description', 'Mars', 'Earth']
-    df.set_index('description', inplace=True)
+    #df.columns=['Description', 'Mars', 'Earth']
+    #df.set_index('Description', inplace=True)
     
     # convert dataframe into HTML format, add bootstrap
-    return df.to_html(classes="table table-striped")
+    #return df.to_html(classes="table table-striped")
+
+def mars_hemispheres(browser):
+    # 1. Use browser to visit the URL 
+    url = 'http://marshemispheres.com/'
+    browser.visit(url)
+
+    # 2. Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+
+    # 3. Write code to retrieve the image urls and titles for each hemisphere.
+    html = browser.html
+    html_soup = soup(html, 'html.parser')
+    var = browser.find_by_css('a.product-item img')
+
+    for i in range(len(var)):
+        browser.find_by_css('a.product-item img')[i].click()
+        hemisphere = {}
+        hem_img_url = browser.html
+        hem_img_soup = soup(html, 'html.parser')
+        img_url = browser.links.find_by_text('Sample').first
+        new_url = img_url['href']
+        title = browser.find_by_css('h2.title').text
+        hemisphere.update({'img_url': new_url, 'title': title})
+        hemisphere_image_urls.append(hemisphere)
+        browser.back()
+
+    # Return the list that holds the dictionary of each image url and title.
+    return hemisphere_image_urls
 
 if __name__ == "__main__":
 
