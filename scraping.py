@@ -18,7 +18,7 @@ def scrape_all():
         "news_title": news_title,
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
-        #"facts": mars_facts(),
+        "facts": mars_facts(),
         "hemispheres": hemisphere_image_urls,
         "last_modified": dt.datetime.now()
     }
@@ -86,23 +86,23 @@ def featured_image(browser):
 
 # ## Mars Facts
 
-#def mars_facts():
+def mars_facts():
     
     # Add try/except for error handling
     #try:
         # Use 'read_html' to scrape the facts table into a dataframe
-    #    df = pd.read_html('https://galaxyfacts-mars.com')[0]
+    df = pd.read_html('https://galaxyfacts-mars.com')[0]
         #df = pd.read_html('https://data-class-mars-facts.s3.amazonaws.com/Mars_Facts/index.html')[0]
     
     #except BaseException:
-    #    return None
+        #return None
     
     # Assign columns and set index of dataframe
-    #df.columns=['Description', 'Mars', 'Earth']
-    #df.set_index('Description', inplace=True)
+    df.columns=['Description', 'Mars', 'Earth']
+    df.set_index('Description', inplace=True)
     
     # convert dataframe into HTML format, add bootstrap
-    #return df.to_html(classes="table table-striped")
+    return df.to_html(classes="table table-striped")
 
 def mars_hemispheres(browser):
     # 1. Use browser to visit the URL 
